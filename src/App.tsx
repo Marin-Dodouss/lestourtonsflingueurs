@@ -39,12 +39,12 @@ function App() {
             <InfoCard 
               icon={<MapPin className="w-8 h-8" />}
               title="Adresse"
-              description="Place Bellecour, 69002 Lyon"
+              description="La Commune, 69007 Lyon"
             />
             <InfoCard 
               icon={<Phone className="w-8 h-8" />}
               title="Contact"
-              description="04 72 XX XX XX"
+              description="04 72 50 32 26"
             />
           </div>
         </div>

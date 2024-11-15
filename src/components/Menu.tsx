@@ -26,7 +26,7 @@ const menuItems = [
   },
   {
     id: 4,
-    name: 'Tourton Sucré',
+    name: 'Tourton Dessert',
     description: 'Pommes caramélisées, sucre vanillé, cannelle',
     price: 6.50,
     image: 'https://tse1.mm.bing.net/th?id=OIP.ciAgy2q4CQRsKr_vfuHEvwHaB7&pid=Api&P=0&h=180'

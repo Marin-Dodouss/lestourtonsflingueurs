@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Trash2, Phone } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 interface CartProps {
@@ -8,13 +8,37 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeFromCart, updateQuantity } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, phoneNumber, setPhoneNumber } = useCart();
+  const [phoneError, setPhoneError] = useState('');
   
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const validatePhoneNumber = (number: string) => {
+    const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
+    return phoneRegex.test(number);
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhoneNumber(value);
+    if (value && !validatePhoneNumber(value)) {
+      setPhoneError('Veuillez entrer un numéro de téléphone valide');
+    } else {
+      setPhoneError('');
+    }
+  };
+
   const handleCheckout = () => {
-    // Implement checkout logic here
-    alert('Commande confirmée ! Vous recevrez un SMS pour le retrait.');
+    if (!phoneNumber) {
+      setPhoneError('Le numéro de téléphone est requis');
+      return;
+    }
+    if (!validatePhoneNumber(phoneNumber)) {
+      setPhoneError('Veuillez entrer un numéro de téléphone valide');
+      return;
+    }
+    alert(`Commande confirmée ! Vous recevrez un SMS au ${phoneNumber} pour le retrait.`);
+    onClose();
   };
 
   return (
@@ -87,11 +111,34 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t">
-            <div className="flex justify-between mb-4">
+          <div className="p-4 border-t space-y-4">
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-1">
+                <Phone className="w-4 h-4 text-gray-500" />
+                <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                  Numéro de téléphone*
+                </label>
+              </div>
+              <input
+                type="tel"
+                id="phone"
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                placeholder="06 XX XX XX XX"
+                className={`w-full px-3 py-2 border rounded-md ${
+                  phoneError ? 'border-red-500' : 'border-gray-300'
+                } focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+              />
+              {phoneError && (
+                <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+              )}
+            </div>
+
+            <div className="flex justify-between">
               <span className="font-semibold">Total</span>
               <span className="font-bold">{total.toFixed(2)}€</span>
             </div>
+
             <button
               onClick={handleCheckout}
               disabled={cartItems.length === 0}
