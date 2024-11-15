@@ -7,4 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  base: '/les-tourtons-flingueurs/', // Replace with your repository name
 });
